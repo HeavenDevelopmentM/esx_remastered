@@ -3,10 +3,9 @@ $onesync: on
 
 name: ESX Legacy Core
 author: ESX Framework
-description: Minimal ESX Legacy setup containing only the ESX core and required dependencies.
+description: Minimal ESX Legacy setup with ESX core only.
 
 tasks:
-  # Download default CFX resources
   - action: download_github
     src: https://github.com/citizenfx/cfx-server-data
     ref: master
@@ -16,7 +15,6 @@ tasks:
   - action: remove_path
     path: ./resources/[cfx-default]/[gameplay]/chat
 
-  # Download and prepare server.cfg / loadingscreen / database
   - action: download_github
     src: https://github.com/esx-framework/esx-recipes
     ref: legacy
@@ -30,10 +28,8 @@ tasks:
     src: ./tmp/recipe/esxLogo.png
     dest: ./esxLogo.png
 
-  # Connect database before importing ESX SQL
   - action: connect_database
 
-  # Download ESX Legacy Core
   - action: download_github
     src: https://github.com/esx-framework/esx-core
     ref: main
@@ -46,7 +42,6 @@ tasks:
     src: ./tmp/core/[core]
     dest: ./resources/[core]
 
-  # Required standalone dependencies
   - action: download_github
     src: https://github.com/Bob74/bob74_ipl
     ref: master
@@ -64,7 +59,7 @@ tasks:
   - action: unzip
     src: ./tmp/files/oxmysql.zip
     dest: ./resources/[standalone]
+    src: ./tmp/files/oxmysql.zip
 
-  # Cleanup
   - action: remove_path
     path: ./tmp
