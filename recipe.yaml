@@ -1,0 +1,70 @@
+$engine: 3
+$onesync: on
+
+name: ESX Legacy Core
+author: ESX Framework
+description: Minimal ESX Legacy setup containing only the ESX core and required dependencies.
+
+tasks:
+  # Download default CFX resources
+  - action: download_github
+    src: https://github.com/citizenfx/cfx-server-data
+    ref: master
+    subpath: resources
+    dest: ./resources/[cfx-default]
+
+  - action: remove_path
+    path: ./resources/[cfx-default]/[gameplay]/chat
+
+  # Download and prepare server.cfg / loadingscreen / database
+  - action: download_github
+    src: https://github.com/esx-framework/esx-recipes
+    ref: legacy
+    dest: ./tmp/recipe
+
+  - action: move_path
+    src: ./tmp/recipe/server.cfg
+    dest: ./server.cfg
+
+  - action: move_path
+    src: ./tmp/recipe/esxLogo.png
+    dest: ./esxLogo.png
+
+  # Connect database before importing ESX SQL
+  - action: connect_database
+
+  # Download ESX Legacy Core
+  - action: download_github
+    src: https://github.com/esx-framework/esx-core
+    ref: main
+    dest: ./tmp/core
+
+  - action: query_database
+    file: ./tmp/core/[SQL]/legacy.sql
+
+  - action: move_path
+    src: ./tmp/core/[core]
+    dest: ./resources/[core]
+
+  # Required standalone dependencies
+  - action: download_github
+    src: https://github.com/Bob74/bob74_ipl
+    ref: master
+    dest: ./resources/[standalone]/bob74_ipl
+
+  - action: download_github
+    src: https://github.com/AvarianKnight/pma-voice
+    ref: main
+    dest: ./resources/[standalone]/pma-voice
+
+  - action: download_file
+    path: ./tmp/files/oxmysql.zip
+    url: https://github.com/overextended/oxmysql/releases/latest/download/oxmysql.zip
+
+  - action: unzip
+    src: ./tmp/files/oxmysql.zip
+    dest: ./resources/[standalone]
+
+  # Cleanup
+  - action: remove_path
+    path: ./tmp
